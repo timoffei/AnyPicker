@@ -2659,13 +2659,27 @@ AnyPicker.prototype = $.extend(AnyPicker.prototype, {
 		var dDateTime1 = new Date($.AnyPicker.extra.dToday),
 		dDateTime2 = new Date($.AnyPicker.extra.dToday);
 
-		dDateTime1.setHours(dDate1.getHours());
-		dDateTime1.setMinutes(dDate1.getMinutes());
-		dDateTime1.setSeconds(dDate1.getSeconds());
+		if (dDate1) {
+			dDateTime1.setHours(dDate1.getHours());
+			dDateTime1.setMinutes(dDate1.getMinutes());
+			dDateTime1.setSeconds(dDate1.getSeconds());
+		}
+		else {
+			dDateTime1.setHours(0);
+			dDateTime1.setMinutes(0);
+			dDateTime1.setSeconds(0);
+		}
 
-		dDateTime2.setHours(dDate2.getHours());
-		dDateTime2.setMinutes(dDate2.getMinutes());
-		dDateTime2.setSeconds(dDate2.getSeconds());
+		if (dDate2) {
+			dDateTime2.setHours(dDate2.getHours());
+			dDateTime2.setMinutes(dDate2.getMinutes());
+			dDateTime2.setSeconds(dDate2.getSeconds());
+		}
+		else {
+			dDateTime2.setHours(0);
+			dDateTime2.setMinutes(0);
+			dDateTime2.setSeconds(0);
+		}
 
 		return apo.compareDateTimes(dDateTime1, dDateTime2);
 	},

@@ -736,6 +736,7 @@ AnyPicker.prototype = $.extend(AnyPicker.prototype, {
 			$(oElem).animate({"top": -iOffset}, 100);
 	
 		apo.tmp.iOffset = iOffset;
+		$(oElem).attr('data-offset', iOffset);
 
 		// ---------------------------------------------------------------
 
@@ -808,22 +809,32 @@ AnyPicker.prototype = $.extend(AnyPicker.prototype, {
 	_getOffset: function(oElem, bAbs)
 	{
 		var sMatrix = $(oElem).hasClass("ap-component-data") ? $(oElem).css("transform") : $(oElem).find(".ap-component-data").css("transform"),
-		iOffset = 0;
+			iOffset = 0;
 
-		if($.CF.isValid(sMatrix))
-		{
-			if(sMatrix === "none")
-				iOffset = 0;
-			else
-			{
-				sMatrix = sMatrix.replace("matrix(", "");
-				sMatrix = sMatrix.replace(")", "");
-				var iArrMatrix = sMatrix.split(", ");
-				iOffset = (iArrMatrix.length > 6) ? parseInt(iArrMatrix[13]) : parseInt(iArrMatrix[5]);
+		var computedOffset = $(oElem).hasClass("ap-component-data") ? $(oElem).attr("data-offset") : $(oElem).find(".ap-component-data").css("data-offset");
+
+		if (typeof computedOffset !== 'undefined') {
+			if (computedOffset <= 0) {
+				iOffset = Math.abs(computedOffset);
+			}
+			else {
+				iOffset = -1 * Math.abs(computedOffset);
 			}
 		}
-	
-		if(bAbs)
+		else {
+			if ($.CF.isValid(sMatrix)) {
+				if (sMatrix === "none")
+					iOffset = 0;
+				else {
+					sMatrix = sMatrix.replace("matrix(", "");
+					sMatrix = sMatrix.replace(")", "");
+					var iArrMatrix = sMatrix.split(", ");
+					iOffset = (iArrMatrix.length > 6) ? parseInt(iArrMatrix[13]) : parseInt(iArrMatrix[5]);
+				}
+			}
+		}
+
+		if (bAbs)
 			return Math.abs(iOffset);
 		else
 			return iOffset;
@@ -854,7 +865,9 @@ AnyPicker.prototype = $.extend(AnyPicker.prototype, {
 				}
 				else
 					$(oElem).animate({"top": -Math.abs(iOffset)}, 100);
+
 				apo.tmp.iOffset = iOffset;
+				$(oElem).attr('data-offset', iOffset);
 			}
 		}
 	},
